@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('home');
+});
+
+Route::get('/home', function () {
+    return view('layouts.app');
+})->name('home');
+
+Route::fallback(function () {
+    return view('pages.not-found');
 });

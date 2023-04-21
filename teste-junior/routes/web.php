@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +20,13 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('layouts.app');
 })->name('home');
+
+// Product
+Route::prefix('product')->group(function () {
+    Route::view('/', 'pages.product')->name('view_products');
+    Route::view('/{id}/edit', 'pages.product')->name('update_product_form');
+    Route::view('/create', 'pages.product')->name('create_product_form');
+});
 
 Route::fallback(function () {
     return view('pages.not-found');

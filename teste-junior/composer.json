@@ -12,9 +12,11 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.2",
         "yajra/laravel-datatables": "^9.0",
-        "yajra/laravel-datatables-oracle": "^10.0"
+        "yajra/laravel-datatables-oracle": "^10.0",
+      "ext-intl": "*"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",

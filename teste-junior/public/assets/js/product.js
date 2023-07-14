@@ -79,9 +79,11 @@ window.showDeleteConfirmation = el => {
 const renderTable = () => {
     return $("#products-table").DataTable({
         ajax: location.origin + "/api/product",
-        searching: false,
+        searching: true,
         processing: true,
         serverSide: true,
+        pageLength: 20,
+        "lengthMenu": [[20, 25, 50, 100], [20, 25, 50, 100]],
         columnDefs: [
             {width: "15%", target: 3},
             {width: "fit-content", target: 2}

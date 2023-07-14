@@ -1,11 +1,11 @@
 <div class="d-flex align-items-baseline justify-content-between mb-4 p-2">
     <h3 class="fw-bold">
-        {{ isUpdateRoute("product") ? "Editar" : "Criar" }} Produto
+        {{ isUpdateRoute("product") ? "Update" : "Create" }} Product
     </h3>
 
 
 
-    <h6 class="fw-normal"><a class="text-decoration-none" href="{{ route('view_products') }}">Voltar</a></h6>
+    <h6 class="fw-normal"><a class="text-decoration-none" href="{{ route('view_products') }}">Back</a></h6>
 </div>
 
 <form class="mx-2 mx-md-4 mx-xxl-5 needs-validation" id="productForm" novalidate>

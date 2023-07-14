@@ -22,11 +22,11 @@ class ProductController extends Controller
     public function index(): JsonResponse|DataTableAbstract
     {
         try {
-            $products = $this->product::all();
-            return DataTables::of($products)
+            $products = $this->product::query();
+            return DataTables::eloquent($products)
                 ->addColumn('actions', function ($product) {
-                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_product_form', ['id' => $product->uuid]) . '">Editar</a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="'.$product->uuid.'" onclick="showDeleteConfirmation(this)">Excluir</button>';
+                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_product_form', ['id' => $product->uuid]) . '">Update</a>';
+                    $btnDelete = '<button type="button" class="btn btn-danger" value="'.$product->uuid.'" onclick="showDeleteConfirmation(this)">Delete</button>';
                     return "<div class='text-right'>$btnEdit $btnDelete</div>";
                 })
                 ->rawColumns(['actions'])

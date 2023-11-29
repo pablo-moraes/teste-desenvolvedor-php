@@ -1,0 +1,8 @@
+.custom-select {
+   max-width: 100px;
+    &-sm {
+        max-width: 65px;
+        background-position: right 0.2rem center  !important;
+        padding-right: 1.25rem !important;
+    }
+}

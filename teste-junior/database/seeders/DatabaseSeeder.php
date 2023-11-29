@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 
@@ -15,12 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::factory(10)->create();
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Seeders only run if in local development
+        if (config('app.env') == 'local') {
+            Product::factory(1000)->create();
+            Customer::factory(1000)->create();
+            Order::factory(1000)->create();
+        }
     }
 }

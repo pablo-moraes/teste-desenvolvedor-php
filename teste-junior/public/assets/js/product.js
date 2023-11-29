@@ -1,14 +1,25 @@
 const alertElement = $("#alert");
 const parameter = location.href.split('/');
 const form = $("#productForm");
+const {product} = window.instances;
 
 let productDatatable;
 $(document).ready(() => {
-     productDatatable = renderTable();
+    productDatatable = renderTable();
     addMask();
 });
 
-const updateProduct = () => {
+$('#searchBar').on('keyup', function() {
+    setTimeout(() => {
+        productDatatable.search(this.value).draw();
+    }, 1000);
+});
+
+$('#showEntriesBtn').on('change', function() {
+    productDatatable.page.len(this.value).draw();
+});
+
+const update = () => {
     const payload = getPayload(form);
 
     product.update({...payload})
@@ -31,7 +42,7 @@ const updateProduct = () => {
         });
 }
 
-const storeProduct = () => {
+const store = () => {
     const payload = getPayload(form);
     product.store({...payload})
         .then(response => {
@@ -41,9 +52,9 @@ const storeProduct = () => {
             alertElement.attr('class', 'alert alert-success');
             alertElement.append().html(`<span>${message}</span>`);
 
-                setTimeout(() => {
-                    window.location.href = location.origin + '/product';
-                }, 2000);
+            setTimeout(() => {
+                window.location.href = location.origin + '/product';
+            }, 2000);
         })
         .catch(error => {
             const {message} = error;
@@ -52,7 +63,7 @@ const storeProduct = () => {
         });
 }
 
-const deleteProduct = () => {
+const destroy = () => {
     const form = $("#deleteProductForm");
     const payload = getPayload(form);
 
@@ -77,18 +88,16 @@ window.showDeleteConfirmation = el => {
 }
 
 const renderTable = () => {
-    return $("#products-table").DataTable({
+    return $("#productsTable").DataTable({
         ajax: location.origin + "/api/product",
-        searching: true,
-        processing: true,
-        serverSide: true,
-        pageLength: 20,
-        "lengthMenu": [[20, 25, 50, 100], [20, 25, 50, 100]],
+        ...defaultDataSettings,
         columnDefs: [
-            {width: "15%", target: 3},
-            {width: "fit-content", target: 2}
+            ...defaultDataSettings["columnDefs"],
+            {width: "fit-content", targets: [2, 3]},
+            {width: "10%", target: 4}
         ],
         columns: [
+            {data: 'uuid', orderable: false, searchable: false},
             {data: 'name'},
             {data: 'bar_code'},
             {data: 'price'},
@@ -102,16 +111,6 @@ const fillOutForm = product => {
     $("#nameInput").val(product.name);
     $("#priceInput").val(product.price);
     $("#productId").val(product.uuid);
-}
-
-const addMask = () => {
-    $('.money').mask('R$ #.##0,00', {
-        reverse: true, translation: {
-            '0': {
-                pattern: /[0-9]/, optional: true
-            }
-        }
-    });
 }
 
 if (parameter.length > 5) {
@@ -129,58 +128,14 @@ if (document.getElementById('deleteProductDialog')) {
     })
 }
 
-
-const toast = (type = 'success', message = 'Your work has been saved', timer = 1500) => {
-    Swal.fire({
-        position: 'top-center',
-        icon: 'success',
-        title: message,
-        showConfirmButton: false,
-        timer: timer
-    })
-}
-
-const getPayload = form => {
-    return form.serializeArray().reduce((acc, item) => {
-        acc[item.name] = item.value;
-        return acc
-    }, {});
-}
-
-//Events
-$("form").on('submit', event => {
-    event.preventDefault();
-})
+$("#deleteProductForm button").on('click', function () {
+    destroy();
+});
 
 $("#btn-update").on('click', function () {
-    updateProduct();
+    update();
 });
 
 $("#btn-create").on('click', function () {
-    storeProduct();
+    store();
 });
-
-$("#deleteProductForm button").on('click', function () {
-    deleteProduct();
-});
-
-// Form Validation
-(function () {
-    'use strict'
-
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
-
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-})()

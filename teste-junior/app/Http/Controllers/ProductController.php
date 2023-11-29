@@ -25,9 +25,9 @@ class ProductController extends Controller
             $products = $this->product::query();
             return DataTables::eloquent($products)
                 ->addColumn('actions', function ($product) {
-                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_product_form', ['id' => $product->uuid]) . '">Update</a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="'.$product->uuid.'" onclick="showDeleteConfirmation(this)">Delete</button>';
-                    return "<div class='text-right'>$btnEdit $btnDelete</div>";
+                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_product_form', ['id' => $product->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
+                    $btnDelete = '<button type="button" class="btn btn-danger" value="'.$product->uuid.'" onclick="showDeleteConfirmation(this)"><i class="fa-solid fa-trash"></i></button>';
+                    return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center w-fitcontent'>$btnEdit $btnDelete</div>";
                 })
                 ->rawColumns(['actions'])
                 ->make();
@@ -43,7 +43,7 @@ class ProductController extends Controller
     public function show(string $uuid): JsonResponse
     {
         try {
-            $product = $this->product::find($uuid);
+            $product = $this->product::findByUuid($uuid)->first();
             if (!$product) {
                 return response()->json([
                     'type' => 'error',
@@ -69,7 +69,7 @@ class ProductController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             $data = $request->all();
@@ -105,7 +105,7 @@ class ProductController extends Controller
 
     public function update(Request $request, string $uuid): JsonResponse
     {
-        $product = $this->product::find($uuid)->first();
+        $product = $this->product::findByUuid($uuid)->first();
 
         try {
             if (empty($product)) {
@@ -136,7 +136,7 @@ class ProductController extends Controller
     public function destroy(string $uuid): JsonResponse
     {
         try {
-            $product = $this->product::find($uuid);
+            $product = $this->product::findByUuid($uuid);
             if (!$product) {
                 return response()->json([
                     'type' => 'error',
@@ -159,5 +159,23 @@ class ProductController extends Controller
                 'errors' => [$th->getMessage()]
             ], 500);
         }
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $search = $request->search;
+        $page = $request->page;
+
+
+        $products = $this->product::query()
+            ->select('uuid as id', 'name as text')
+            ->where('name', 'like', "%$search%")
+            ->paginate(20, ['*'], 'page', $page);
+        return response()->json([
+            'type' => 'success',
+            'body' => $products,
+            'message' => 'Products loaded successfully!'
+        ]);
+
     }
 }

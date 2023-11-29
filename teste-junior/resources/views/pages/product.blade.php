@@ -38,7 +38,7 @@
 @endsection
 
 @push('scripts')
-    <script type="module" src="{{ asset('assets/js/product.js') }}"></script>
     <script type="module" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script type="module" src="{{ asset('assets/js/product.js') }}"></script>
     <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" integrity="sha512-0XDfGxFliYJPFrideYOoxdgNIvrwGTLnmK20xZbCAvPfLGQMzHUsaqZK8ZoH+luXGRxTrS46+Aq400nCnAT0/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 @endpush

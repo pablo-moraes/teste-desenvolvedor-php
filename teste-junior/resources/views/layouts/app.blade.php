@@ -4,15 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Laravel</title>
+    <title>@yield('title', 'Home')</title>
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     @vite('resources/js/app.js')
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
+    <script src="{{ asset('assets/js/all.js') }}" defer></script>
     <style>
         body {
             font-family: 'Nunito', sans-serif;
+        }
+
+        .select2-container {
+            width: auto !important;
         }
     </style>
     @yield('styles')
@@ -32,6 +44,20 @@
 
     <div class="my-3 p-3 bg-white rounded box-shadow shadow-sm">
         @yield('content')
+        @sectionMissing('content')
+            <h1>Zombie Ipsum</h1>
+            Zombie ipsum reversus ab viral inferno nam rick de unrelenting de moveri, voodoo Romero fecimus et comedat
+            Nigh animata terror ut attonitos Indeflexus, et apocalypsi et Fit Expansis Terror twenty-eight and locis
+            serpere. Oculos in terram carnem and unrelenting plan aere vulnerum bello, guts Ut in ambulabat
+            Sicut Forsitan quaeritis iam, zomby qui alypse Vivens epidemic in solum zombies. Tee zombie ad historiarum
+            lum missing fames brucks Sicut impetum plateas iride virus Vivens, Avium et putrid walking nostram
+            maleficia? de Expansis monstra finem z? Congress. Deadgurl Ut cerebro malus go leighter ipsum, Fit stalking
+            carnem living terram unleashed, tee eater hoc dead et. Undead z? mauris The iam alypse terribilem locis sunt
+            narcisse terrore, zombi aere Terror implent mortui glassy-eyed Nigh animated tofth, et cerebro vivos missing
+            iam corpse Panduntur mortuos tee. Creaturas horrenda animata cerebro Sicut magna contagium twen
+            epidemic living, mortua armis agite dictum viscera maggots four Congress morbi, Zonbi horror
+            Cum scythe vivos ab currere malus.
+        @endif
     </div>
 </main>
 @stack('scripts')

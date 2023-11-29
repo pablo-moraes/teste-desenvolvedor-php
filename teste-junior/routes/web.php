@@ -28,6 +28,20 @@ Route::prefix('product')->group(function () {
     Route::view('/create', 'pages.product')->name('create_product_form');
 });
 
+// Customer
+Route::prefix('customer')->group(function () {
+    Route::view('/', 'pages.customer')->name('view_customers');
+    Route::view('/{id}/edit', 'pages.customer')->name('update_customer_form');
+    Route::view('/create', 'pages.customer')->name('create_customer_form');
+});
+
+// Order
+Route::prefix('order')->group(function () {
+    Route::view('/', 'pages.order')->name('view_orders');
+    Route::view('/{id}/edit', 'pages.order')->name('update_order_form');
+    Route::view('/create', 'pages.order')->name('create_order_form');
+});
+
 Route::fallback(function () {
     return view('pages.not-found');
 });

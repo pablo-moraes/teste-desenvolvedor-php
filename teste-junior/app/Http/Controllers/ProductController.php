@@ -137,7 +137,8 @@ class ProductController extends Controller
     {
         try {
             $product = $this->product::findByUuid($uuid);
-            if (!$product) {
+
+            if (!$product->exists()) {
                 return response()->json([
                     'type' => 'error',
                     'errors' => [],
@@ -176,6 +177,5 @@ class ProductController extends Controller
             'body' => $products,
             'message' => 'Products loaded successfully!'
         ]);
-
     }
 }

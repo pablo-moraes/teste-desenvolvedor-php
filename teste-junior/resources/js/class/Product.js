@@ -88,4 +88,26 @@ export class Product {
                 });
         })
     }
+
+    multiDelete(payload) {
+        return new Promise((resolve, reject) => {
+            api.delete(`multi-delete/product`, {data: payload})
+                .then(response => {
+                    const {body, type, message} = response.data;
+                    resolve({
+                        product: body,
+                        type,
+                        message
+                    });
+                })
+                .catch(err => {
+                    const {errors, message, type} = err.response.data;
+                    reject({
+                        data: {...errors},
+                        type,
+                        message
+                    });
+                });
+        })
+    }
 }

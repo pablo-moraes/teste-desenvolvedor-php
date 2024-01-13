@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MultiDeleteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -49,3 +50,5 @@ Route::prefix('order')->controller(OrderController::class)->group(function () {
     Route::delete('/{id}', 'destroy')->name('delete_order');
     Route::post('/', 'store')->name('create_order');
 });
+
+Route::delete('/multi-delete/{entity}', [MultiDeleteController::class, 'destroy'])->name('multi_delete_entities');

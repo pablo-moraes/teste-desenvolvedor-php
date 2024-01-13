@@ -1,7 +1,7 @@
 @section('btn-route', route('create_product_form'))
 @section('btn-text', 'New Product')
 
-<x-table id="productsTable">
+<x-table id="productsTable" model="products">
     <x-slot:header>
         <tr class="text-start">
             <th scope="col"><input class="form-check-input" type="checkbox" id="checkAll"></th>

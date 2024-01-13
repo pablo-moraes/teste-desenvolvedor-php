@@ -31,7 +31,7 @@ const update = () => {
                 alertElement.append().html(`<span>${message}</span>`);
 
                 setTimeout(() => {
-                    window.location.href = location.origin + '/order';
+                    goTo('order');
                 }, 1000);
             }
         })
@@ -53,7 +53,7 @@ const store = () => {
             alertElement.append().html(`<span>${message}</span>`);
 
             setTimeout(() => {
-                window.location.href = location.origin + '/order';
+                goTo('order');
             }, 2000);
         })
         .catch(error => {
@@ -79,6 +79,28 @@ const destroy = () => {
         .catch(err => {
             console.log(err);
         })
+}
+
+window.orders = {};
+window.orders.multiDelete = () => {
+    // Get all selected rows and return their ids as an array
+    const rows = Array.from($("td input:checkbox:checked"), e => e.value);
+    const payload = {
+        uuids: rows
+    }
+
+    order.multiDelete(payload)
+        .then(response => {
+            const {message, type} = response;
+            if (type === 'success') {
+                toast(type, message);
+                $("#btnCloseModal").click();
+                orderDatatable.clear().draw();
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 // Global function, because I can't reach the method
@@ -119,7 +141,7 @@ const renderTable = () => {
     });
 }
 
-const fillOutForm = order => {
+const populateForm = order => {
     $("#quantityInput").val(order.quantity);
     $("#orderId").val(order.uuid);
 }
@@ -128,7 +150,7 @@ if (parameter.length > 5) {
     order.get(parameter[4])
         .then(response => {
             const {order} = response;
-            fillOutForm(order);
+            populateForm(order);
 
             // append selected values to determined select elements
             appendOption("customerInput", order.customer);

@@ -88,4 +88,26 @@ export class Order {
                 });
         })
     }
+
+    multiDelete(payload) {
+        return new Promise((resolve, reject) => {
+            api.delete(`multi-delete/order`, {data: payload})
+                .then(response => {
+                    const {body, type, message} = response.data;
+                    resolve({
+                        order: body,
+                        type,
+                        message
+                    });
+                })
+                .catch(err => {
+                    const {errors, message, type} = err.response.data;
+                    reject({
+                        data: {...errors},
+                        type,
+                        message
+                    });
+                });
+        })
+    }
 }

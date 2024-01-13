@@ -9,13 +9,13 @@ $(document).ready(() => {
     addMask();
 });
 
-$('#searchBar').on('keyup', function() {
+$('#searchBar').on('keyup', function () {
     setTimeout(() => {
         productDatatable.search(this.value).draw();
     }, 1000);
 });
 
-$('#showEntriesBtn').on('change', function() {
+$('#showEntriesBtn').on('change', function () {
     productDatatable.page.len(this.value).draw();
 });
 
@@ -31,7 +31,7 @@ const update = () => {
                 alertElement.append().html(`<span>${message}</span>`);
 
                 setTimeout(() => {
-                    window.location.href = location.origin + '/product';
+                    goTo('product');
                 }, 1000);
             }
         })
@@ -53,7 +53,7 @@ const store = () => {
             alertElement.append().html(`<span>${message}</span>`);
 
             setTimeout(() => {
-                window.location.href = location.origin + '/product';
+                goTo('product');
             }, 2000);
         })
         .catch(error => {
@@ -81,6 +81,28 @@ const destroy = () => {
         })
 }
 
+window.products = {};
+window.products.multiDelete = () => {
+    // Get all selected rows and return their ids as an array
+    const rows = Array.from($("td input:checkbox:checked"), e => e.value);
+    const payload = {
+        uuids: rows
+    }
+
+    product.multiDelete(payload)
+        .then(response => {
+            const {message, type} = response;
+            if (type === 'success') {
+                toast(type, message);
+                $("#btnCloseModal").click();
+                productDatatable.clear().draw();
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}
+
 // Global function, because I can't reach the method
 window.showDeleteConfirmation = el => {
     $("#productId").val(el.value);
@@ -106,7 +128,7 @@ const renderTable = () => {
     });
 }
 
-const fillOutForm = product => {
+const populateForm = product => {
     $("#codeInput").val(product.bar_code);
     $("#nameInput").val(product.name);
     $("#priceInput").val(product.price);
@@ -117,7 +139,7 @@ if (parameter.length > 5) {
     product.get(parameter[4])
         .then(response => {
             const {product} = response;
-            fillOutForm(product);
+            populateForm(product);
         });
 }
 

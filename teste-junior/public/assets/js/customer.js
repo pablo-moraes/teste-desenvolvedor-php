@@ -31,7 +31,7 @@ const update =  () => {
                 alertElement.append().html(`<span>${message}</span>`);
 
                 setTimeout(() => {
-                    window.location.href = location.origin + '/customer';
+                    goTo('product')
                 }, 1000);
             }
         })
@@ -53,7 +53,7 @@ const store =  () => {
             alertElement.append().html(`<span>${message}</span>`);
 
             setTimeout(() => {
-                window.location.href = location.origin + '/customer';
+                goTo('customer');
             }, 2000);
         })
         .catch(error => {
@@ -79,6 +79,27 @@ const destroy = () => {
         .catch(err => {
             console.log(err);
         })
+}
+
+window.customers = {};
+window.customers.multiDelete = () => {
+    // Get all selected rows and return their ids as an array
+    const rows = Array.from($("td input:checkbox:checked"), e => e.value);
+    const payload = {
+        uuids: rows
+    }
+    customer.multiDelete(payload)
+        .then(response => {
+            const {message, type} = response;
+            if (type === 'success') {
+                toast(type, message);
+                $("#btnCloseModal").click();
+                customerDatatable.clear().draw();
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 // Global function, because I can't reach the method
@@ -107,7 +128,7 @@ const renderTable = () => {
     });
 }
 
-const fillOutForm = customer => {
+const populateForm = customer => {
     $("#docInput").val(customer.document);
     $("#nameInput").val(customer.name);
     $("#mailInput").val(customer.email);
@@ -119,7 +140,7 @@ if (parameter.length > 5) {
         .then(response => {
             const {customer} = response;
             console.log(response);
-            fillOutForm(customer);
+            populateForm(customer);
         });
 }
 

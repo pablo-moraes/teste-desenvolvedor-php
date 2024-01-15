@@ -7,20 +7,20 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" aria-current="page" href="/home">Home</a>
+                        <a class="nav-link text-center {{ request()->routeIs('home') ? 'active' : '' }}" aria-current="page" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('view_products') ? 'active' : '' }}" href="{{ route('view_products') }}">Products</a>
+                        <a class="nav-link text-center {{ request()->routeIs('view_products') ? 'active' : '' }}" href="{{ route('view_products') }}">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('view_orders') ? 'active' : '' }}" href="{{ route('view_orders') }}">Orders</a>
+                        <a class="nav-link text-center {{ request()->routeIs('view_orders') ? 'active' : '' }}" href="{{ route('view_orders') }}">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('view_customers') ? 'active' : '' }}" href="{{ route('view_customers') }}">Customers</a>
+                        <a class="nav-link text-center {{ request()->routeIs('view_customers') ? 'active' : '' }}" href="{{ route('view_customers') }}">Customers</a>
                     </li>
                 </ul>
                 <div>
-                    <div class="d-flex justify-content-end gap-2">
+                    <div class="d-flex justify-content-lg-end justify-content-start gap-2 flex-column flex-lg-row">
                         <a href="#" class="text-decoration-none px-2 btn btn-primary">{{ __('Login') }}</a>
                         <a href="#" class="text-decoration-none px-2 btn btn-outline-secondary">{{ __('Sign Up') }}</a>
                     </div>

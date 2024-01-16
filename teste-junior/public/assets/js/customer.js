@@ -1,7 +1,7 @@
 const alertElement = $("#alert");
 const parameter = location.href.split('/');
 const form = $("#customerForm");
-const {customer} = window.instances;
+const crudClient = window.crudClient;
 
 let customerDatatable;
 $(document).ready(() => {
@@ -22,7 +22,7 @@ $('#showEntriesBtn').on('change', function() {
 const update =  () => {
     const payload = getPayload(form);
 
-    customer.update({...payload})
+    crudClient.update({...payload}, 'customer')
         .then(response => {
             const {message, type} = response;
 
@@ -31,7 +31,7 @@ const update =  () => {
                 alertElement.append().html(`<span>${message}</span>`);
 
                 setTimeout(() => {
-                    goTo('product')
+                    goTo('customer')
                 }, 1000);
             }
         })
@@ -44,7 +44,7 @@ const update =  () => {
 
 const store =  () => {
     const payload = getPayload(form);
-    customer.store({...payload})
+    crudClient.save({...payload}, 'customer')
         .then(response => {
             const {message} = response;
 
@@ -67,12 +67,12 @@ const destroy = () => {
     const form = $("#deleteCustomerForm");
     const payload = getPayload(form);
 
-    customer.delete(payload)
+    crudClient.delete(payload, 'customer')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
-                $("#btnCloseModal").click();
+                showAlert(type, message);
+                confirmDeletionModal.hide();
                 customerDatatable.clear().draw();
             }
         })
@@ -88,11 +88,12 @@ window.customers.multiDelete = () => {
     const payload = {
         uuids: rows
     }
-    customer.multiDelete(payload)
+
+    crudClient.multiDelete(payload, 'customer')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
+                showAlert(type, message);
                 $("#btnCloseModal").click();
                 customerDatatable.clear().draw();
             }
@@ -100,12 +101,6 @@ window.customers.multiDelete = () => {
         .catch(err => {
             console.log(err);
         });
-}
-
-// Global function, because I can't reach the method
-window.showDeleteConfirmation = el => {
-    $("#customerId").val(el.value);
-    confirmDeletionModal.show();
 }
 
 const renderTable = () => {
@@ -136,19 +131,12 @@ const populateForm = customer => {
 }
 
 if (parameter.length > 5) {
-    customer.get(parameter[4])
+    crudClient.get(parameter[4], 'customer')
         .then(response => {
             const {customer} = response;
             console.log(response);
             populateForm(customer);
         });
-}
-
-let confirmDeletionModal;
-if (document.getElementById('deleteCustomerDialog')) {
-    confirmDeletionModal = new Modal(document.getElementById('deleteCustomerDialog'), {
-        keyboard: false
-    })
 }
 
 $("#deleteCustomerForm button").on('click', function () {

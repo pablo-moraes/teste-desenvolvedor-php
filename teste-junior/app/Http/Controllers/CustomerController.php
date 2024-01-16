@@ -27,7 +27,7 @@ class CustomerController extends Controller
             return DataTables::eloquent($customers)
                 ->addColumn('actions', function ($customer) {
                     $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_customer_form', ['id' => $customer->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $customer->uuid . '" onclick="showDeleteConfirmation(this)"><i class="fa-solid fa-trash"></i></button>';
+                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $customer->uuid . '" onclick="showDeleteConfirmation('."'customerId'".',  this)"><i class="fa-solid fa-trash"></i></button>';
                     return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center'>$btnEdit $btnDelete</div>";
                 })
                 ->rawColumns(['actions'])

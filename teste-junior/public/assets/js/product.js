@@ -1,7 +1,7 @@
 const alertElement = $("#alert");
 const parameter = location.href.split('/');
 const form = $("#productForm");
-const {product} = window.instances;
+const crudClient = window.crudClient;
 
 let productDatatable;
 $(document).ready(() => {
@@ -22,13 +22,12 @@ $('#showEntriesBtn').on('change', function () {
 const update = () => {
     const payload = getPayload(form);
 
-    product.update({...payload})
+    crudClient.update({...payload}, 'product')
         .then(response => {
             const {message, type} = response;
 
             if (type === 'success') {
-                alertElement.attr('class', 'alert alert-success');
-                alertElement.append().html(`<span>${message}</span>`);
+                showAlert(type, message);
 
                 setTimeout(() => {
                     goTo('product');
@@ -37,29 +36,21 @@ const update = () => {
         })
         .catch(error => {
             const {message} = error
-            alertElement.attr('class', 'alert alert-danger');
-            alertElement.append().html(`<span>${message}</span>`);
+            showAlert('error',message)
         });
 }
 
 const store = () => {
     const payload = getPayload(form);
-    product.store({...payload})
+    crudClient.save({...payload}, 'product')
         .then(response => {
-            const {message} = response;
-
-            showAlert()
-            alertElement.attr('class', 'alert alert-success');
-            alertElement.append().html(`<span>${message}</span>`);
-
-            setTimeout(() => {
-                goTo('product');
-            }, 2000);
+            const {type, message} = response;
+            showAlert(type, message)
+            goTo('product', 2000);
         })
         .catch(error => {
-            const {message} = error;
-            alertElement.addClass('alert-danger')
-            alertElement.append().html(`<span>${message}</span>`);
+            const {type, message} = error;
+            showAlert(type, message);
         });
 }
 
@@ -67,12 +58,12 @@ const destroy = () => {
     const form = $("#deleteProductForm");
     const payload = getPayload(form);
 
-    product.delete(payload)
+    crudClient.delete(payload, 'product')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
-                $("#btnCloseModal").click();
+                showAlert(type, message);
+                confirmDeletionModal.hide();
                 productDatatable.clear().draw();
             }
         })
@@ -89,24 +80,20 @@ window.products.multiDelete = () => {
         uuids: rows
     }
 
-    product.multiDelete(payload)
+    crudClient.multiDelete(payload, 'product')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
+                showAlert(type, message);
+
                 $("#btnCloseModal").click();
                 productDatatable.clear().draw();
             }
         })
         .catch(err => {
-            console.log(err);
+            const {type, message} = err;
+            showAlert(type, message);
         });
-}
-
-// Global function, because I can't reach the method
-window.showDeleteConfirmation = el => {
-    $("#productId").val(el.value);
-    confirmDeletionModal.show();
 }
 
 const renderTable = () => {
@@ -136,18 +123,12 @@ const populateForm = product => {
 }
 
 if (parameter.length > 5) {
-    product.get(parameter[4])
+    crudClient.get(parameter[4], 'product')
         .then(response => {
-            const {product} = response;
+            const {product, type, message} = response;
+            showAlert(type, message);
             populateForm(product);
         });
-}
-
-let confirmDeletionModal;
-if (document.getElementById('deleteProductDialog')) {
-    confirmDeletionModal = new Modal(document.getElementById('deleteProductDialog'), {
-        keyboard: false
-    })
 }
 
 $("#deleteProductForm button").on('click', function () {

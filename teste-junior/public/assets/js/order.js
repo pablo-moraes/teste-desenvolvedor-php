@@ -1,7 +1,7 @@
 const alertElement = $("#alert");
 const parameter = location.href.split('/');
 const form = $("#orderForm");
-const {order} = window.instances;
+const crudClient = window.crudClient;
 
 let orderDatatable;
 $(document).ready(() => {
@@ -22,7 +22,7 @@ $('#showEntriesBtn').on('change', function() {
 const update = () => {
     const payload = getPayload(form);
     console.log(payload);
-    order.update({...payload})
+    crudClient.update({...payload}, 'order')
         .then(response => {
             const {message, type} = response;
 
@@ -44,7 +44,7 @@ const update = () => {
 
 const store = () => {
     const payload = getPayload(form);
-    order.store({...payload})
+    crudClient.save({...payload}, 'order')
         .then(response => {
             const {message} = response;
 
@@ -67,12 +67,12 @@ const destroy = () => {
     const form = $("#deleteOrderForm");
     const payload = getPayload(form);
 
-    order.delete(payload)
+    crudClient.delete(payload, 'order')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
-                $("#btnCloseModal").click();
+                showAlert(type, message);
+                confirmDeletionModal.hide();
                 orderDatatable.clear().draw();
             }
         })
@@ -89,11 +89,11 @@ window.orders.multiDelete = () => {
         uuids: rows
     }
 
-    order.multiDelete(payload)
+    crudClient.multiDelete(payload, 'order')
         .then(response => {
             const {message, type} = response;
             if (type === 'success') {
-                toast(type, message);
+                showAlert(type, message);
                 $("#btnCloseModal").click();
                 orderDatatable.clear().draw();
             }
@@ -101,12 +101,6 @@ window.orders.multiDelete = () => {
         .catch(err => {
             console.log(err);
         });
-}
-
-// Global function, because I can't reach the method
-window.showDeleteConfirmation = el => {
-    $("#orderId").val(el.value);
-    confirmDeletionModal.show();
 }
 
 const renderTable = () => {
@@ -147,7 +141,7 @@ const populateForm = order => {
 }
 
 if (parameter.length > 5) {
-    order.get(parameter[4])
+    crudClient.get(parameter[4], 'order')
         .then(response => {
             const {order} = response;
             populateForm(order);
@@ -156,13 +150,6 @@ if (parameter.length > 5) {
             appendOption("customerInput", order.customer);
             appendOption("productInput", order.product);
         });
-}
-
-let confirmDeletionModal;
-if (document.getElementById('deleteOrderDialog')) {
-    confirmDeletionModal = new Modal(document.getElementById('deleteOrderDialog'), {
-        keyboard: false
-    })
 }
 
 $("#deleteOrderForm button").on('click', function () {

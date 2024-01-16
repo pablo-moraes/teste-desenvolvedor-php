@@ -34,7 +34,7 @@ class OrderController extends Controller
             return DataTables::eloquent($orders)
                 ->addColumn('actions', function ($order) {
                     $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_order_form', ['id' => $order->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $order->uuid . '" onclick="showDeleteConfirmation(this)"><i class="fa-solid fa-trash"></i> </button>';
+                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $order->uuid . '" onclick="showDeleteConfirmation('."'orderId'".', this)"><i class="fa-solid fa-trash"></i> </button>';
                     return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center'>$btnEdit $btnDelete</div>";
                 })
                 ->addColumn('total_price', function ($order) {

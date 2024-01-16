@@ -8,9 +8,9 @@ const addMask = () => {
     });
 }
 
-const toast = (type = 'success', message = 'Your work has been saved', timer = 1500) => {
+const showAlert = (type = 'success', message = 'Your work has been saved', timer = 1500) => {
     Swal.fire({
-        position: 'top-center',
+        position: 'center',
         icon: 'success',
         title: message,
         showConfirmButton: false,
@@ -18,12 +18,22 @@ const toast = (type = 'success', message = 'Your work has been saved', timer = 1
     });
 }
 
+const getPayload = form => {
+    return form.serializeArray().reduce((acc, item) => {
+        acc[item.name] = item.value;
+        return acc
+    }, {});
+}
+
 /**
  * Takes the user to the specifiec path
  * @param page path specified
+ * @param delay to redirect
  */
-const goTo = (page = 'home') => {
-    window.location.href = location.origin + `/${page}`;
+const goTo = (page = 'home', delay = 1000) => {
+    setTimeout(() => {
+        window.location.href = location.origin + `/${page}`;
+    }, delay);
 }
 
 const appendOption = (el, data) => {
@@ -54,3 +64,15 @@ const defaultDataSettings = {
         }
     ],
 };
+
+let confirmDeletionModal;
+if (document.getElementById('deleteRegisterModal')) {
+    confirmDeletionModal = new Modal(document.getElementById('deleteRegisterModal'), {
+        keyboard: false
+    })
+}
+
+window.showDeleteConfirmation = (elementId, element) => {
+    $(`#${elementId}`).val(element.value);
+    confirmDeletionModal.show();
+}

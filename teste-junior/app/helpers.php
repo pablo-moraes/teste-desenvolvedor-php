@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-function isUpdateRoute($routeName = ""): bool
+/** Check if current route matches to the update route nomenclature.
+ * @param string $name
+ * @return bool
+ */
+function isUpdatePath(string $name = ""): bool
 {
-    $fullRoute = "update_{$routeName}_form";
-    if (!Route::has($fullRoute)) return false;
-
-    return Route::is($fullRoute);
+    return Route::is("update_{$name}_form");
 }
 

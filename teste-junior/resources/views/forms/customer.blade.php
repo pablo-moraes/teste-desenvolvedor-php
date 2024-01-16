@@ -1,6 +1,10 @@
+@php
+    $updatePath = isUpdatePath("customer");
+@endphp
+
 <div class="d-flex align-items-baseline justify-content-between mb-4 p-2">
     <h3 class="fw-bold">
-        {{ isUpdateRoute("customer") ? "Update" : "Create" }} Customer
+        {{ $updatePath ? "Update Customer" : "Create Customer" }}
     </h3>
 
 
@@ -10,9 +14,10 @@
 <form class="mx-2 mx-md-4 mx-xxl-5 needs-validation" id="customerForm" novalidate>
     @csrf
 
-    @if(isUpdateRoute("customer"))
+    @if($updatePath)
         <input type="hidden" name="uuid" id="customerId">
     @endif
+
     <div class="form-group">
         <label for="nameInput">Name</label>
         <input type="text" class="form-control" id="nameInput" name="name" placeholder="Name">
@@ -35,12 +40,10 @@
         </div>
     </div>
     <div class="form-group my-3">
-        <button class="btn btn-primary" id="{{ isUpdateRoute("customer") ? 'btn-update' : 'btn-create' }}">
-            {{ isUpdateRoute("customer") ? 'Update Customer' : 'Submit' }}
-        </button>
-    </div>
-
-    <div class="alert" role="alert" id="alert">
-
+        @unless($updatePath)
+            <button class="btn btn-primary" id="btn-create">Submit</button>
+        @else
+            <button class="btn btn-primary" id="btn-update">Update Customer</button>
+        @endif
     </div>
 </form>

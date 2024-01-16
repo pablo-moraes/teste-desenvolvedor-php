@@ -22,10 +22,6 @@
                 <input type="search" name="" id="searchBar" class="form-control">
             </div>
         </div>
-        <x-confirmation-modal
-            id="{{$id}}"
-            :model="$model"
-        ></x-confirmation-modal>
     </div>
     <table
         {{ $attributes->merge(['id' => $id]) }} class="table table-bordered table-hover table-striped align-middle w-100 pt-3">

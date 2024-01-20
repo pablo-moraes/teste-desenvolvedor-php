@@ -65,12 +65,8 @@ class Order extends Model
      */
     public function totalPrice(): Attribute
     {
-        $price = isset($this->product) ?
-            $this->product->getRawOriginal('price')
-            : 0;
-        $total = isset($this->quantity)
-            ? $this->quantity * $price
-            : 0;
+        $price = isset($this->product) ? $this->product->getRawOriginal('price') : 0;
+        $total = isset($this->quantity) ? $this->quantity * $price : 0;
 
         $formatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
         return Attribute::make(

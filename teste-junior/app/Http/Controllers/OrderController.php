@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\OrdersDataTable;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\{
@@ -22,26 +23,10 @@ class OrderController extends Controller
     }
 
 
-    public function index(): JsonResponse|DataTableAbstract
+    public function index(OrdersDataTable $ordersDataTable): JsonResponse|DataTableAbstract
     {
         try {
-            $orders = $this->order::query()
-                ->with([
-                    'customer:uuid,name',
-                    'product:uuid,name,price'
-                ])->select('orders.*');
-
-            return DataTables::eloquent($orders)
-                ->addColumn('actions', function ($order) {
-                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_order_form', ['id' => $order->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $order->uuid . '" onclick="showDeleteConfirmation('."'orderId'".', this)"><i class="fa-solid fa-trash"></i> </button>';
-                    return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center'>$btnEdit $btnDelete</div>";
-                })
-                ->addColumn('total_price', function ($order) {
-                    return $order->total_price;
-                })
-                ->rawColumns(['actions'])
-                ->make();
+            return $ordersDataTable->dataTable();
         } catch (\Throwable $th) {
             return response()->json([
                 'type' => 'error',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\CustomersDataTable;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
@@ -20,18 +21,10 @@ class CustomerController extends Controller
         $this->customer = new Customer();
     }
 
-    public function index(): JsonResponse|DataTableAbstract
+    public function index(CustomersDataTable $customersDataTable): JsonResponse|DataTableAbstract
     {
         try {
-            $customers = $this->customer::query();
-            return DataTables::eloquent($customers)
-                ->addColumn('actions', function ($customer) {
-                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_customer_form', ['id' => $customer->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="' . $customer->uuid . '" onclick="showDeleteConfirmation('."'customerId'".',  this)"><i class="fa-solid fa-trash"></i></button>';
-                    return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center'>$btnEdit $btnDelete</div>";
-                })
-                ->rawColumns(['actions'])
-                ->make();
+            return $customersDataTable->dataTable();
         } catch (\Throwable $th) {
             return response()->json([
                 'type' => 'error',

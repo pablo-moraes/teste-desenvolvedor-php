@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\ProductsDataTable;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\{
@@ -19,18 +20,10 @@ class ProductController extends Controller
     }
 
 
-    public function index(): JsonResponse|DataTableAbstract
+    public function index(ProductsDataTable $productsDataTable): JsonResponse|DataTableAbstract
     {
         try {
-            $products = $this->product::query();
-            return DataTables::eloquent($products)
-                ->addColumn('actions', function ($product) {
-                    $btnEdit = '<a type="button" class="btn btn-primary" href="' . route('update_product_form', ['id' => $product->uuid]) . '"><i class="fa-solid fa-pen-to-square"></i></a>';
-                    $btnDelete = '<button type="button" class="btn btn-danger" value="'.$product->uuid.'" onclick="showDeleteConfirmation('."'productId'".', this)"><i class="fa-solid fa-trash"></i></button>';
-                    return "<div class='text-right d-flex flex-wrap gap-2 justify-content-center w-fitcontent'>$btnEdit $btnDelete</div>";
-                })
-                ->rawColumns(['actions'])
-                ->make();
+            return $productsDataTable->dataTable();
         } catch (\Throwable $th) {
             return response()->json([
                 'type' => 'error',

@@ -1,7 +1,8 @@
-const alertElement = $("#alert");
+import {ApiManager} from "@/app.js";
+
 const parameter = location.href.split('/');
 const form = $("#orderForm");
-const crudClient = window.crudClient;
+const crudClient = ApiManager.general;
 
 let orderDatatable;
 $(document).ready(() => {
@@ -9,13 +10,13 @@ $(document).ready(() => {
     addMask();
 });
 
-$('#searchBar').on('keyup', function() {
+$('#searchBar').on('keyup', function () {
     setTimeout(() => {
         orderDatatable.search(this.value).draw();
     }, 1000);
 });
 
-$('#showEntriesBtn').on('change', function() {
+$('#showEntriesBtn').on('change', function () {
     orderDatatable.page.len(this.value).draw();
 });
 
@@ -24,21 +25,16 @@ const update = () => {
     console.log(payload);
     crudClient.update({...payload}, 'order')
         .then(response => {
-            const {message, type} = response;
+            const {type, message} = response;
 
             if (type === 'success') {
-                alertElement.attr('class', 'alert alert-success');
-                alertElement.append().html(`<span>${message}</span>`);
-
-                setTimeout(() => {
-                    goTo('order');
-                }, 1000);
+                showAlert(type, message);
+                goTo('order');
             }
         })
         .catch(error => {
-            const {message} = error
-            alertElement.attr('class', 'alert alert-danger');
-            alertElement.append().html(`<span>${message}</span>`);
+            const {type, message} = error
+            showAlert(type, message)
         });
 }
 
@@ -46,20 +42,14 @@ const store = () => {
     const payload = getPayload(form);
     crudClient.save({...payload}, 'order')
         .then(response => {
-            const {message} = response;
+            const {type, message} = response;
 
-            showAlert()
-            alertElement.attr('class', 'alert alert-success');
-            alertElement.append().html(`<span>${message}</span>`);
-
-            setTimeout(() => {
-                goTo('order');
-            }, 2000);
+            showAlert(type, message);
+            goTo('order');
         })
         .catch(error => {
-            const {message} = error;
-            alertElement.addClass('alert-danger')
-            alertElement.append().html(`<span>${message}</span>`);
+            const {type, message} = error;
+            showAlert(type, message);
         });
 }
 
@@ -69,7 +59,7 @@ const destroy = () => {
 
     crudClient.delete(payload, 'order')
         .then(response => {
-            const {message, type} = response;
+            const {type, message} = response;
             if (type === 'success') {
                 showAlert(type, message);
                 confirmDeletionModal.hide();

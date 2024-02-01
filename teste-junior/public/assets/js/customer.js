@@ -1,7 +1,8 @@
-const alertElement = $("#alert");
+import {ApiManager} from '@/app.js';
+
 const parameter = location.href.split('/');
 const form = $("#customerForm");
-const crudClient = window.crudClient;
+const crudClient = ApiManager.general;
 
 let customerDatatable;
 $(document).ready(() => {
@@ -9,17 +10,17 @@ $(document).ready(() => {
     addMask();
 });
 
-$('#searchBar').on('keyup', function() {
+$('#searchBar').on('keyup', function () {
     setTimeout(() => {
         customerDatatable.search(this.value).draw();
     }, 1000);
 });
 
-$('#showEntriesBtn').on('change', function() {
+$('#showEntriesBtn').on('change', function () {
     customerDatatable.page.len(this.value).draw();
 });
 
-const update =  () => {
+const update = () => {
     const payload = getPayload(form);
 
     crudClient.update({...payload}, 'customer')
@@ -27,39 +28,28 @@ const update =  () => {
             const {message, type} = response;
 
             if (type === 'success') {
-                alertElement.attr('class', 'alert alert-success');
-                alertElement.append().html(`<span>${message}</span>`);
-
-                setTimeout(() => {
-                    goTo('customer')
-                }, 1000);
+                showAlert(type, message);
+                goTo('customer')
             }
         })
         .catch(error => {
-            const {message} = error
-            alertElement.attr('class', 'alert alert-danger');
-            alertElement.append().html(`<span>${message}</span>`);
+            const {type, message} = error
+            showAlert(type, message)
         });
 }
 
-const store =  () => {
+const store = () => {
     const payload = getPayload(form);
     crudClient.save({...payload}, 'customer')
         .then(response => {
-            const {message} = response;
+            const {type, message} = response;
 
-            showAlert()
-            alertElement.attr('class', 'alert alert-success');
-            alertElement.append().html(`<span>${message}</span>`);
-
-            setTimeout(() => {
-                goTo('customer');
-            }, 2000);
+            showAlert(type, message)
+            goTo('customer');
         })
         .catch(error => {
-            const {message} = error;
-            alertElement.addClass('alert-danger')
-            alertElement.append().html(`<span>${message}</span>`);
+            const {type, message} = error;
+            showAlert(type, message);
         });
 }
 
@@ -76,8 +66,10 @@ const destroy = () => {
                 customerDatatable.clear().draw();
             }
         })
-        .catch(err => {
-            console.log(err);
+        .catch(error => {
+            const { type, message } = error;
+
+            showAlert(type, message);
         })
 }
 
@@ -91,15 +83,16 @@ window.customers.multiDelete = () => {
 
     crudClient.multiDelete(payload, 'customer')
         .then(response => {
-            const {message, type} = response;
+            const {type, message} = response;
             if (type === 'success') {
                 showAlert(type, message);
                 $("#btnCloseModal").click();
                 customerDatatable.clear().draw();
             }
         })
-        .catch(err => {
-            console.log(err);
+        .catch(error => {
+            const { type, message } = error;
+            showAlert(type, message);
         });
 }
 
@@ -133,8 +126,8 @@ const populateForm = customer => {
 if (parameter.length > 5) {
     crudClient.get(parameter[4], 'customer')
         .then(response => {
-            const {customer} = response;
-            console.log(response);
+            const {type, message, customer} = response;
+            showAlert(type, message);
             populateForm(customer);
         });
 }

@@ -1,7 +1,8 @@
-const alertElement = $("#alert");
+import { ApiManager } from "@/app.js";
+
 const parameter = location.href.split('/');
 const form = $("#productForm");
-const crudClient = window.crudClient;
+const crudClient = ApiManager.general;
 
 let productDatatable;
 $(document).ready(() => {
@@ -28,10 +29,7 @@ const update = () => {
 
             if (type === 'success') {
                 showAlert(type, message);
-
-                setTimeout(() => {
-                    goTo('product');
-                }, 1000);
+                goTo('product');
             }
         })
         .catch(error => {

@@ -9,15 +9,9 @@
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-    @vite('resources/js/app.js')
+    @vite(['resources/js/app.js', public_path('assets/js/auth/user.js')])
     <style>
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
 
-        .select2-container {
-            width: auto !important;
-        }
     </style>
     @yield('styles')
 </head>
@@ -34,7 +28,7 @@
         @endif
     </div>
 
-    <div class="my-3 p-3 bg-white rounded box-shadow shadow-sm">
+    <div class="my-3 p-3 bg-white rounded box-shadow shadow-sm {{ $containerClass ?? '' }}">
         @yield('content')
         @sectionMissing('content')
             <h1>Zombie Ipsum</h1>

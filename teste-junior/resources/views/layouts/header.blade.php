@@ -20,12 +20,30 @@
                     </li>
                 </ul>
                 <div>
-                    <div class="d-flex justify-content-lg-end justify-content-start gap-2 flex-column flex-lg-row">
-                        <a href="#" class="text-decoration-none px-2 btn btn-primary">{{ __('Login') }}</a>
-                        <a href="#" class="text-decoration-none px-2 btn btn-outline-secondary">{{ __('Sign Up') }}</a>
-                    </div>
+
+                    @auth
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-center" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ auth()->user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenu">
+                                    <li onclick="userAuth.logout()"><button class="dropdown-item btn-logout" type="button">Logout</button></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    @endauth
+
+                    @guest
+                            <div class="d-flex justify-content-lg-end justify-content-start gap-2 flex-column flex-lg-row">
+                                <a href="{{ route('login') }}" class="text-decoration-none px-2 btn btn-primary">{{ __('Login') }}</a>
+                                <a href="{{ route('register') }}" class="text-decoration-none px-2 btn btn-outline-secondary">{{ __('Sign Up') }}</a>
+                            </div>
+                    @endguest
                 </div>
             </div>
         </div>
     </nav>
 </header>
+
+

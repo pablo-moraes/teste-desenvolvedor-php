@@ -1,8 +1,32 @@
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+.eye-icon {
+    pointer-events: all;
+    right: 2%;
+    top: 45%;
+}
+
 .custom-select {
-   max-width: 100px;
+    max-width: 100px;
+
     &-sm {
         max-width: 65px;
-        background-position: right 0.2rem center  !important;
+        background-position: right 0.2rem center !important;
         padding-right: 1.25rem !important;
+    }
+}
+
+.select2-container {
+    width: auto !important;
+}
+
+$max-width-start: 0;
+$max-width-end: 1000;
+
+@for $width from $max-width-start through $max-width-end {
+    .mw-#{$width} {
+        max-width: #{$width}px;
     }
 }

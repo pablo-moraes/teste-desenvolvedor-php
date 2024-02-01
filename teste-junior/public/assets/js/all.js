@@ -47,6 +47,16 @@ const appendOption = (el, data) => {
     }
 }
 
+const showOrHidePassword = () => {
+    $('.eye-icon').toggleClass('d-none');
+    const inputPassword = $('#inputPasswd');
+    if ($('.eye-icon.bi-eye-slash-fill').hasClass('d-none')) {
+        return inputPassword.attr('type', 'password');
+    }
+
+    inputPassword.attr('type', 'text');
+}
+
 // Default configs for datatable instance
 const defaultDataSettings = {
     processing: true,

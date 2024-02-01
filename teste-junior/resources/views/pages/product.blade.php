@@ -26,5 +26,5 @@
 @endsection
 
 @push('scripts')
-    <script type="module" src="{{ asset('assets/js/product.js') }}"></script>
+    @vite(public_path('assets/js/product.js'))
 @endpush
